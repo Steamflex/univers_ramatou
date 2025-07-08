@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bienvenue Princesse 💖</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(270deg, #ffe0e9, #fbeeff, #d4f1ff, #e0f7fa, #ffe0f0);
+      background-size: 1000% 1000%;
+      animation: gradientFlow 30s ease infinite;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      position: relative;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #d63384;
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease;
+      position: relative;
+      z-index: 10; /* Au-dessus des coeurs */
+      user-select: text;
+    }
+
+    p {
+      font-size: 1.1em;
+      color: #6c1a3d;
+      text-align: center;
+      max-width: 400px;
+      margin: 0 auto 30px;
+      animation: fadeIn 3s ease;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card {
+      width: 300px;
+      height: 180px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      animation: fadeInUp 2s ease;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .card h2 {
+      color: #d63384;
+      font-size: 1.5em;
+      text-align: center;
+      user-select: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Pluie de coeurs boostée */
+    .coeur {
+      position: fixed;
+      top: -50px;
+      pointer-events: none;
+      user-select: none;
+      font-size: var(--size);
+      color: var(--color);
+      animation-name: tomber;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      opacity: 0.8;
+      filter: drop-shadow(0 0 2px rgba(0,0,0,0.15));
+      z-index: 5;
+    }
+
+    @keyframes tomber {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bienvenue Princesse 💖</h1>
+  <p>Ce petit univers a été créé rien que pour toi, pour te rappeler à quel point tu es spéciale à mes yeux.</p>
+
+  <div class="card" onclick="enterLoveWorld()">
+    <h2>✨ Entrer dans mon monde ✨</h2>
+  </div>
+
+  <script>
+    function enterLoveWorld() {
+      window.location.href = "univers.html";
+    }
+  </script>
+
+  <script>
+    const couleurs = ['#a0c8f0', '#f5a3c7', '#ff4f6d']; // bleu clair, rose, rouge
+    const maxCoeurs = 40;
+
+    function creeCoeur() {
+      const coeur = document.createElement('div');
+      coeur.classList.add('coeur');
+      coeur.textContent = '❤️';
+
+      const taille = (Math.random() * 20 + 15).toFixed(2) + 'px';
+      coeur.style.setProperty('--size', taille);
+
+      const couleur = couleurs[Math.floor(Math.random() * couleurs.length)];
+      coeur.style.setProperty('--color', couleur);
+
+      coeur.style.left = Math.random() * 100 + 'vw';
+
+      const duree = (Math.random() * 6 + 6).toFixed(2);
+      coeur.style.animationDuration = duree + 's';
+
+      coeur.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      document.body.appendChild(coeur);
+
+      setTimeout(() => {
+        coeur.remove();
+        creeCoeur();
+      }, duree * 1000);
+    }
+
+    for(let i = 0; i < maxCoeurs; i++) {
+      setTimeout(creeCoeur, i * 300);
+    }
+  </script>
+
+</body>
+</html>

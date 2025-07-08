@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Univers magique de Ramatou</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #a0c8f0, #f5d1e0);
+      margin: 0;
+      padding: 20px;
+      color: #104a78;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between; /* Pour que bouton reste en bas */
+    }
+    h1 {
+      font-size: 2.8em;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .cartes-container {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 1200px;
+      width: 100%;
+      flex-grow: 1; /* Pour prendre l’espace dispo */
+      margin-bottom: 30px;
+    }
+    .carte {
+      background: rgba(255 255 255 / 0.85);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgb(16 74 120 / 0.2);
+      flex: 1 1 300px;
+      max-width: 320px;
+      padding: 25px;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      will-change: transform;
+    }
+    .carte:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(16, 74, 120, 0.4);
+      transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .carte h2 {
+      font-family: 'Segoe Script', cursive;
+      font-size: 1.6em;
+      margin-bottom: 0.75rem;
+      color: #104a78;
+      user-select: none;
+    }
+    .carte p {
+      font-size: 1em;
+      line-height: 1.4;
+      user-select: none;
+      color: #375a82;
+    }
+
+    /* Responsive amélioré */
+    @media (max-width: 900px) {
+      body {
+        padding: 15px;
+      }
+      .cartes-container {
+        gap: 20px;
+      }
+      .carte {
+        flex: 1 1 45%;
+        max-width: none;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 2.2em;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      .cartes-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .carte {
+        flex: 1 1 100%;
+        max-width: none;
+        padding: 15px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+
+    /* Bouton Mur en bas */
+    #btnMur {
+      background-color: #d63384;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 18px 40px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 20px rgba(214, 51, 132, 0.5);
+      margin-top: 15px;
+      align-self: center;
+      font-family: 'Segoe Script', cursive;
+      letter-spacing: 1.2px;
+    }
+    #btnMur:hover {
+      background-color: #a02a6f;
+      box-shadow: 0 12px 30px rgba(160, 42, 111, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <h1>💙 Ton univers magique, Princesse 🌸</h1>
+
+  <div class="cartes-container" id="cartesContainer">
+    <!-- Les cartes seront insérées ici par JS -->
+  </div>
+
+  <button id="btnMur">Mur de messages d’amour 💌</button>
+
+  <script src="data.js"></script>
+  <script>
+    const container = document.getElementById('cartesContainer');
+
+    cartes.forEach(({id, titre, description, popupTitle, popupContent}) => {
+      const card = document.createElement('div');
+      card.className = 'carte';
+      card.id = id;
+
+      card.innerHTML = `<h2>${titre}</h2><p>${description}</p>`;
+      card.addEventListener('click', () => {
+        const popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '0';
+        popup.style.left = '0';
+        popup.style.width = '100vw';
+        popup.style.height = '100vh';
+        popup.style.backgroundColor = 'rgba(0,0,0,0.6)';
+        popup.style.display = 'flex';
+        popup.style.justifyContent = 'center';
+        popup.style.alignItems = 'center';
+        popup.style.zIndex = '9999';
+        popup.style.padding = '20px';
+        popup.style.overflowY = 'auto';
+
+        const content = document.createElement('div');
+        content.style.background = 'white';
+        content.style.borderRadius = '20px';
+        content.style.padding = '25px';
+        content.style.width = '90vw';
+        content.style.maxWidth = '900px';
+        content.style.maxHeight = '90vh';
+        content.style.overflowY = 'auto';
+        content.style.overflowX = 'hidden';
+        content.style.position = 'relative';
+        content.style.boxShadow = '0 8px 30px rgba(16,74,120,0.3)';
+
+        content.innerHTML = `<h2 style="font-family: 'Segoe Script', cursive; color:#104a78; margin-top:0;">${popupTitle}</h2>${popupContent}`;
+
+        // Style pour images souvenirs + zoom
+        const styleTag = document.createElement('style');
+        styleTag.textContent = `
+          .photo-polaroid img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+          }
+          .photo-polaroid {
+            margin: 0 auto 20px auto;
+          }
+        `;
+        content.appendChild(styleTag);
+
+        setTimeout(() => {
+          content.querySelectorAll('.photo-polaroid img').forEach(img => {
+            img.addEventListener('click', () => {
+              const overlay = document.createElement('div');
+              overlay.style.position = 'fixed';
+              overlay.style.top = '0';
+              overlay.style.left = '0';
+              overlay.style.width = '100vw';
+              overlay.style.height = '100vh';
+              overlay.style.backgroundColor = 'rgba(0,0,0,0.9)';
+              overlay.style.display = 'flex';
+              overlay.style.justifyContent = 'center';
+              overlay.style.alignItems = 'center';
+              overlay.style.cursor = 'zoom-out';
+              overlay.style.zIndex = '10000';
+
+              const imgZoom = document.createElement('img');
+              imgZoom.src = img.src;
+              imgZoom.style.maxWidth = '90vw';
+              imgZoom.style.maxHeight = '90vh';
+              imgZoom.style.borderRadius = '15px';
+              imgZoom.style.boxShadow = '0 0 30px rgba(255,255,255,0.8)';
+              imgZoom.style.transition = 'transform 0.3s ease';
+
+              overlay.appendChild(imgZoom);
+              document.body.appendChild(overlay);
+
+              overlay.addEventListener('click', () => {
+                document.body.removeChild(overlay);
+              });
+            });
+          });
+        }, 50);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Fermer ✖';
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '10px';
+        closeBtn.style.right = '15px';
+        closeBtn.style.background = '#f06292';
+        closeBtn.style.border = 'none';
+        closeBtn.style.color = 'white';
+        closeBtn.style.padding = '5px 12px';
+        closeBtn.style.fontSize = '1em';
+        closeBtn.style.borderRadius = '15px';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.addEventListener('click', () => document.body.removeChild(popup));
+
+        content.appendChild(closeBtn);
+        popup.appendChild(content);
+        document.body.appendChild(popup);
+      });
+
+      container.appendChild(card);
+    });
+
+    // Bouton accès mur
+    const btnMur = document.getElementById('btnMur');
+    btnMur.addEventListener('click', () => {
+      window.location.href = 'mur.html'; // change le nom si besoin
+    });
+  </script>
+</body>
+</html>
