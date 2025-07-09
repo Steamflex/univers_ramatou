@@ -1,4 +1,612 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Univers magique de Ramatou</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #a0c8f0, #f5d1e0);
+      margin: 0;
+      padding: 20px;
+      color: #104a78;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between; /* Pour que bouton reste en bas */
+    }
+    h1 {
+      font-size: 2.8em;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .cartes-container {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 1200px;
+      width: 100%;
+      flex-grow: 1; /* Pour prendre l’espace dispo */
+      margin-bottom: 30px;
+    }
+    .carte {
+      background: rgba(255 255 255 / 0.85);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgb(16 74 120 / 0.2);
+      flex: 1 1 300px;
+      max-width: 320px;
+      padding: 25px;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      will-change: transform;
+    }
+    .carte:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(16, 74, 120, 0.4);
+      transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .carte h2 {
+      font-family: 'Segoe Script', cursive;
+      font-size: 1.6em;
+      margin-bottom: 0.75rem;
+      color: #104a78;
+      user-select: none;
+    }
+    .carte p {
+      font-size: 1em;
+      line-height: 1.4;
+      user-select: none;
+      color: #375a82;
+    }
+
+    /* Responsive amélioré */
+    @media (max-width: 900px) {
+      body {
+        padding: 15px;
+      }
+      .cartes-container {
+        gap: 20px;
+      }
+      .carte {
+        flex: 1 1 45%;
+        max-width: none;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 2.2em;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      .cartes-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .carte {
+        flex: 1 1 100%;
+        max-width: none;
+        padding: 15px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+
+    /* Fix décalage horizontal mobile */
+    @media (max-width: 600px) {
+      body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        margin: 0 !important;
+        overflow-x: hidden;
+      }
+      .cartes-container {
+        margin: 0 auto;
+        max-width: 100vw;
+      }
+      .carte {
+        box-sizing: border-box;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
+
+    /* Bouton Mur en bas */
+    #btnMur {
+      background-color: #d63384;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 18px 40px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 20px rgba(214, 51, 132, 0.5);
+      margin-top: 15px;
+      align-self: center;
+      font-family: 'Segoe Script', cursive;
+      letter-spacing: 1.2px;
+    }
+    #btnMur:hover {
+      background-color: #a02a6f;
+      box-shadow: 0 12px 30px rgba(160, 42, 111, 0.7);
+    }
+  
+@media (max-width: 600px) {
+  #popupRubrique > div {
+    width: 95vw !important;
+    padding: 15px !important;
+    max-height: 85vh !important;
+  }
+
+  .journal-container,
+  .post-it,
+  .photo-polaroid {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .photo-polaroid {
+    max-width: 100% !important;
+  }
+
+  .photo-polaroid img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+</style>
+</head>
+<body>
+  <h1>💙 Ton univers magique, Princesse 🌸</h1>
+
+  <div class="cartes-container" id="cartesContainer">
+    <!-- Les cartes seront insérées ici par JS -->
+  </div>
+
+  <button id="btnMur">YO 💌</button>
+
+  <script>
+    const cartes = [
+      {
+        id: "lettre",
+        titre: "💌 wesh",
+        description: "Un petit mot qui vient du fond du cœur...",
+        popupTitle: "Pour toi, ma Princesse 💙",
+        popupContent: `
+          <div style="
+            font-family: 'Segoe Script', cursive;
+            font-size: 1.2em;
+            background: #fffaf3;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            line-height: 1.7;
+            animation: fadeIn 2s ease-in-out;
+            max-height: 400px;
+            overflow-y: auto;
+          ">
+            <style>
+              @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+              }
+            
+@media (max-width: 600px) {
+  #popupRubrique > div {
+    width: 95vw !important;
+    padding: 15px !important;
+    max-height: 85vh !important;
+  }
+
+  .journal-container,
+  .post-it,
+  .photo-polaroid {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .photo-polaroid {
+    max-width: 100% !important;
+  }
+
+  .photo-polaroid img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+</style>
+            <p>Ma Ramatou,</p>
+            <p>
+              Ce site est né d’une envie simple : te faire sourire, même de loin.<br/>
+              Dans un monde parfois gris, tu es ma lumière, mon réconfort.
+            </p>
+            <p>
+              Je t’écris ces lignes pour que tu n’oublies jamais combien tu comptes pour moi.<br/>
+              Tu es mon repère, mon calme, ma force. Tu es la seule que j’aime dans ce monde.
+            </p>
+            <p>
+              Peu importe la distance ou les jours difficiles : mon amour reste là, intact, fort, réel.
+            </p>
+            <p style="text-align: right;">— Salif </p>
+          </div>
+        `
+      },
+      {
+        id: "souvenirs",
+        titre: "📸 Souvenirs",
+        description: "Un peu de nos moments précieux ensemble",
+        popupTitle: "Nos plus beaux souvenirs...💖",
+        popupContent: `
+          <style>
+            .photo-polaroid {
+              background: white;
+              padding: 10px 10px 30px 10px;
+              border-radius: 12px;
+              box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+              width: 100%;
+              max-width: 200px;
+              position: relative;
+              transition: transform 0.3s;
+            }
+            .photo-polaroid:hover {
+              transform: scale(1.03);
+            }
+            .photo-polaroid img {
+              border-radius: 10px;
+              width: 100%;
+              height: auto;
+              object-fit: cover;
+            }
+            .photo-caption {
+              position: absolute;
+              bottom: 8px;
+              left: 50%;
+              transform: translateX(-50%);
+              font-family: 'Segoe Script', cursive;
+              font-size: 0.9em;
+              color: #333;
+              background: rgba(255, 255, 200, 0.8);
+              padding: 5px 10px;
+              border-radius: 6px;
+              max-width: 90%;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            }
+          
+@media (max-width: 600px) {
+  #popupRubrique > div {
+    width: 95vw !important;
+    padding: 15px !important;
+    max-height: 85vh !important;
+  }
+
+  .journal-container,
+  .post-it,
+  .photo-polaroid {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .photo-polaroid {
+    max-width: 100% !important;
+  }
+
+  .photo-polaroid img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+</style>
+
+          <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;">
+            <div class="photo-polaroid">
+              <img src="images/photo1.jpg" alt="Souvenir 1" />
+              <div class="photo-caption">Ce jour-là, j’ai su que rien ne serait plus comme avant 🌚</div>
+            </div>
+
+            <div class="photo-polaroid">
+              <img src="images/photo2.jpg" alt="Souvenir 2" />
+              <div class="photo-caption">🥲</div>
+            </div>
+
+            <div class="photo-polaroid">
+              <img src="images/photo3.jpg" alt="Souvenir 3" />
+              <div class="photo-caption">Ramatou Je t'aime ❤️</div>
+            </div>
+
+            <div class="photo-polaroid">
+              <img src="images/photo4.jpg" alt="Souvenir 4" />
+              <div class="photo-caption">Je ne te l’ai jamais dit, mais j’ai trop aimé ce moment 🤦‍♂️</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: "pensée",
+        titre: "💭 Pensée de la semaine",
+        description: "Un message unique rien que pour toi",
+        popupTitle: "📝 Mon petit journal pour toi",
+        popupContent: `
+          <style>
+            .journal-container {
+              background: #fff7f8;
+              border-radius: 20px;
+              padding: 30px;
+              max-width: 520px;
+              margin: auto;
+              font-family: 'Segoe Script', cursive;
+              color: #6b3a4a;
+              font-size: 1.2em;
+              line-height: 1.7;
+              box-shadow: 0 12px 30px rgba(107, 58, 74, 0.3);
+              position: relative;
+              overflow-y: auto;
+              max-height: 440px;
+            }
+            .post-it {
+              background: #fff0f3cc;
+              border-radius: 15px;
+              box-shadow: 5px 7px 15px rgba(0,0,0,0.1);
+              padding: 22px;
+              margin-bottom: 28px;
+              position: relative;
+              font-size: 1.15em;
+              font-family: 'Segoe Script', cursive;
+              color: #523340;
+              line-height: 1.55;
+              cursor: default;
+              user-select: text;
+              transition: transform 0.35s ease, box-shadow 0.35s ease;
+            }
+            .post-it:hover {
+              transform: scale(1.05);
+              box-shadow: 7px 10px 22px rgba(0,0,0,0.18);
+            }
+            .sticker {
+              position: absolute;
+              font-size: 2em;
+              user-select: none;
+              opacity: 0.75;
+            }
+            .sticker.heart { top: 12px; right: 22px; color: #ff5273; }
+            .sticker.star { bottom: 18px; left: 18px; color: #f5d25e; }
+            .sticker.feather { top: 45px; left: 45px; color: #8fbee4; }
+            @media (max-width: 600px) {
+              .journal-container {
+                font-size: 1em;
+                padding: 20px;
+                max-height: 370px;
+              }
+              .post-it {
+                font-size: 1em;
+                padding: 18px;
+              }
+            }
+          
+@media (max-width: 600px) {
+  #popupRubrique > div {
+    width: 95vw !important;
+    padding: 15px !important;
+    max-height: 85vh !important;
+  }
+
+  .journal-container,
+  .post-it,
+  .photo-polaroid {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .photo-polaroid {
+    max-width: 100% !important;
+  }
+
+  .photo-polaroid img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+</style>
+          <div class="journal-container">
+            <div class="post-it">
+              Ma douce Princesse,'des fois'<br/>
+              Chaque jour loin de toi, fais augmenté mon amour pour toi.<br/>
+              Ta présence me manque, mais ton amour me porte.<br/>
+              Tu es mon bb à moi, ma force, mon amo...bon j'arrête, après tu vas dire que c'est mignon😂<br/>
+              <div class="sticker heart">❤️</div>
+            </div>
+            <div class="post-it">
+              Peu importe les obstacles, rien ne pourra changer ce que je ressens pour toi.<br/>
+              Reste forte, ma princesse, je suis toujours là, avec toi, pour toi.<br/>
+              Je t’aime plus que jamais.<br/>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    const container = document.getElementById('cartesContainer');
+
+    function ouvrirRubrique(id) {
+      // Vérifier si popup déjà ouvert, fermer si oui avant d'en ouvrir un autre
+      const existingPopup = document.getElementById('popupRubrique');
+      if (existingPopup) existingPopup.remove();
+
+      const carteData = cartes.find(c => c.id === id);
+      if (!carteData) return;
+
+      const { popupTitle, popupContent } = carteData;
+
+      const popup = document.createElement('div');
+      popup.id = 'popupRubrique';
+      Object.assign(popup.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: '9999',
+        padding: '20px',
+        overflowY: 'auto'
+      });
+
+      const content = document.createElement('div');
+      Object.assign(content.style, {
+        background: 'white',
+        borderRadius: '20px',
+        padding: '25px',
+        width: '90vw',
+        maxWidth: '900px',
+        maxHeight: '90vh',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        position: 'relative',
+        boxShadow: '0 8px 30px rgba(16,74,120,0.3)',
+      });
+
+      content.innerHTML = `<h2 style="font-family: 'Segoe Script', cursive; color:#104a78; margin-top:0;">${popupTitle}</h2>${popupContent}`;
+
+      // Style + zoom images souvenirs
+      const styleTag = document.createElement('style');
+      styleTag.textContent = `
+        .photo-polaroid img {
+          max-width: 100%;
+          height: auto;
+          display: block;
+          margin: 0 auto;
+          cursor: zoom-in;
+          transition: transform 0.3s ease;
+        }
+        .photo-polaroid {
+          margin: 0 auto 20px auto;
+        }
+      `;
+      content.appendChild(styleTag);
+
+      setTimeout(() => {
+        content.querySelectorAll('.photo-polaroid img').forEach(img => {
+          img.addEventListener('click', () => {
+            const overlay = document.createElement('div');
+            Object.assign(overlay.style, {
+              position: 'fixed',
+              top: '0',
+              left: '0',
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0,0,0,0.9)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              cursor: 'zoom-out',
+              zIndex: '10000'
+            });
+
+            const imgZoom = document.createElement('img');
+            imgZoom.src = img.src;
+            Object.assign(imgZoom.style, {
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              borderRadius: '15px',
+              boxShadow: '0 0 30px rgba(255,255,255,0.8)',
+              transition: 'transform 0.3s ease'
+            });
+
+            overlay.appendChild(imgZoom);
+            document.body.appendChild(overlay);
+
+            overlay.addEventListener('click', () => {
+              document.body.removeChild(overlay);
+            });
+          });
+        });
+      }, 50);
+
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = 'Fermer ✖';
+      Object.assign(closeBtn.style, {
+        position: 'absolute',
+        top: '10px',
+        right: '15px',
+        background: '#f06292',
+        border: 'none',
+        color: 'white',
+        padding: '5px 12px',
+        fontSize: '1em',
+        borderRadius: '15px',
+        cursor: 'pointer',
+      });
+      closeBtn.addEventListener('click', () => {
+        popup.remove();
+        history.pushState({}, '', location.pathname); // reset URL au close
+      });
+
+      content.appendChild(closeBtn);
+      popup.appendChild(content);
+      document.body.appendChild(popup);
+    }
+
+    // Création des cartes + listener
+    cartes.forEach(({ id, titre, description }) => {
+      const card = document.createElement('div');
+      card.className = 'carte';
+      card.id = id;
+      card.innerHTML = `<h2>${titre}</h2><p>${description}</p>`;
+
+      card.addEventListener('click', () => {
+        ouvrirRubrique(id);
+        history.pushState({ page: id }, '', `?page=${id}`);
+      });
+
+      container.appendChild(card);
+    });
+
+    // Bouton accès mur (inchangé)
+    const btnMur = document.getElementById('btnMur');
+    btnMur.addEventListener('click', () => {
+      window.location.href = 'mur.html';
+    });
+
+    // Lecture du paramètre ?page= à l’ouverture de la page
+    function getParamPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('page');
+    }
+
+    window.addEventListener('load', () => {
+      const page = getParamPage();
+      if (page) ouvrirRubrique(page);
+    });
+
+    // Gestion bouton Retour navigateur
+    window.addEventListener('popstate', (event) => {
+      if (event.state && event.state.page) {
+        ouvrirRubrique(event.state.page);
+      } else {
+        const popup = document.getElementById('popupRubrique');
+        if (popup) popup.remove();
+      }
+    });
+  </script>
+</body>
+</html>
+
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
