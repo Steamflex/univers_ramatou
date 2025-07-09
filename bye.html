@@ -27,6 +27,26 @@
     text-shadow: 0 0 15px #7c3aed99;
   }
 
+  /* Bouton retour */
+  #btnMur {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 12px;
+    background: #d63384;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    user-select: none;
+    z-index: 20;
+    transition: background-color 0.3s ease;
+  }
+  #btnMur:hover {
+    background-color: #a02a6f;
+  }
+
   /* Coeurs roses animés */
   .heart {
     position: fixed;
@@ -70,9 +90,15 @@
 </style>
 </head>
 <body>
+  <button id="btnMur">← Retour au Mur 💌</button>
   <h1>Bye Princesse 💙</h1>
 
   <script>
+    // Bouton retour vers mur
+    document.getElementById('btnMur').addEventListener('click', () => {
+      window.location.href = 'mur.html';
+    });
+
     // Génère des cœurs roses aléatoires qui tombent
     const createHeart = () => {
       const heart = document.createElement('div');
@@ -80,7 +106,6 @@
       heart.style.left = Math.random() * window.innerWidth + 'px';
       heart.style.animationDuration = 4 + Math.random() * 4 + 's';
       heart.style.opacity = 0.5 + Math.random() * 0.5;
-      heart.style.fontSize = (10 + Math.random() * 10) + 'px';
       document.body.appendChild(heart);
       setTimeout(() => {
         heart.remove();
