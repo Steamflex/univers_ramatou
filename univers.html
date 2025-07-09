@@ -15,7 +15,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between; /* Pour que bouton reste en bas */
+      justify-content: space-between;
     }
     h1 {
       font-size: 2.8em;
@@ -29,7 +29,7 @@
       justify-content: center;
       max-width: 1200px;
       width: 100%;
-      flex-grow: 1; /* Pour prendre l’espace dispo */
+      flex-grow: 1;
       margin-bottom: 30px;
     }
     .carte {
@@ -140,6 +140,30 @@
       background-color: #a02a6f;
       box-shadow: 0 12px 30px rgba(160, 42, 111, 0.7);
     }
+
+    /* Nouveau CSS pour corriger le décalage mobile */
+    #popupRubrique {
+      overscroll-behavior: contain;
+      touch-action: manipulation;
+    }
+
+    .popup-content {
+      width: 100% !important;
+      max-width: 95vw !important;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 600px) {
+      #popupRubrique > div {
+        padding: 12px !important;
+        width: 95vw !important;
+      }
+      
+      .post-it {
+        padding: 15px !important;
+        font-size: 1em !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -179,12 +203,12 @@
             </style>
             <p>Ma Ramatou,</p>
             <p>
-              Ce site est né d’une envie simple : te faire sourire, même de loin.<br/>
+              Ce site est né d'une envie simple : te faire sourire, même de loin.<br/>
               Dans un monde parfois gris, tu es ma lumière, mon réconfort.
             </p>
             <p>
-              Je t’écris ces lignes pour que tu n’oublies jamais combien tu comptes pour moi.<br/>
-              Tu es mon repère, mon calme, ma force. Tu es la seule que j’aime dans ce monde.
+              Je t'écris ces lignes pour que tu n'oublies jamais combien tu comptes pour moi.<br/>
+              Tu es mon repère, mon calme, ma force. Tu es la seule que j'aime dans ce monde.
             </p>
             <p>
               Peu importe la distance ou les jours difficiles : mon amour reste là, intact, fort, réel.
@@ -238,7 +262,7 @@
           <div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;">
             <div class="photo-polaroid">
               <img src="images/photo1.jpg" alt="Souvenir 1" />
-              <div class="photo-caption">Ce jour-là, j’ai su que rien ne serait plus comme avant 🌚</div>
+              <div class="photo-caption">Ce jour-là, j'ai su que rien ne serait plus comme avant 🌚</div>
             </div>
 
             <div class="photo-polaroid">
@@ -248,12 +272,12 @@
 
             <div class="photo-polaroid">
               <img src="images/photo3.jpg" alt="Souvenir 3" />
-              <div class="photo-caption">Ramatou Je t'aime ❤️</div>
+              <div class="photo-caption">Ramatou Je t'aime ❤</div>
             </div>
 
             <div class="photo-polaroid">
               <img src="images/photo4.jpg" alt="Souvenir 4" />
-              <div class="photo-caption">Je ne te l’ai jamais dit, mais j’ai trop aimé ce moment 🤦‍♂️</div>
+              <div class="photo-caption">Je ne te l'ai jamais dit, mais j'ai trop aimé ce moment 🤦‍♂</div>
             </div>
           </div>
         `
@@ -326,12 +350,12 @@
               Chaque jour loin de toi, fais augmenté mon amour pour toi.<br/>
               Ta présence me manque, mais ton amour me porte.<br/>
               Tu es mon bb à moi, ma force, mon amo...bon j'arrête, après tu vas dire que c'est mignon😂<br/>
-              <div class="sticker heart">❤️</div>
+              <div class="sticker heart">❤</div>
             </div>
             <div class="post-it">
               Peu importe les obstacles, rien ne pourra changer ce que je ressens pour toi.<br/>
               Reste forte, ma princesse, je suis toujours là, avec toi, pour toi.<br/>
-              Je t’aime plus que jamais.<br/>
+              Je t'aime plus que jamais.<br/>
             </div>
           </div>
         `
@@ -341,7 +365,12 @@
     const container = document.getElementById('cartesContainer');
 
     function ouvrirRubrique(id) {
-      // Vérifier si popup déjà ouvert, fermer si oui avant d'en ouvrir un autre
+      // Sauvegarder la position de défilement
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = -${scrollY}px;
+      document.body.style.width = '100%';
+
       const existingPopup = document.getElementById('popupRubrique');
       if (existingPopup) existingPopup.remove();
 
@@ -363,15 +392,17 @@
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: '9999',
-        padding: '20px',
-        overflowY: 'auto'
+        padding: '10px',
+        overflowY: 'auto',
+        boxSizing: 'border-box'
       });
 
       const content = document.createElement('div');
+      content.className = 'popup-content';
       Object.assign(content.style, {
         background: 'white',
         borderRadius: '20px',
-        padding: '25px',
+        padding: '20px',
         width: '90vw',
         maxWidth: '900px',
         maxHeight: '90vh',
@@ -379,11 +410,11 @@
         overflowX: 'hidden',
         position: 'relative',
         boxShadow: '0 8px 30px rgba(16,74,120,0.3)',
+        boxSizing: 'border-box'
       });
 
-      content.innerHTML = `<h2 style="font-family: 'Segoe Script', cursive; color:#104a78; margin-top:0;">${popupTitle}</h2>${popupContent}`;
+      content.innerHTML = <h2 style="font-family: 'Segoe Script', cursive; color:#104a78; margin-top:0;">${popupTitle}</h2>${popupContent};
 
-      // Style + zoom images souvenirs
       const styleTag = document.createElement('style');
       styleTag.textContent = `
         .photo-polaroid img {
@@ -454,7 +485,11 @@
       });
       closeBtn.addEventListener('click', () => {
         popup.remove();
-        history.pushState({}, '', location.pathname); // reset URL au close
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+        history.pushState({}, '', location.pathname);
       });
 
       content.appendChild(closeBtn);
@@ -467,23 +502,23 @@
       const card = document.createElement('div');
       card.className = 'carte';
       card.id = id;
-      card.innerHTML = `<h2>${titre}</h2><p>${description}</p>`;
+      card.innerHTML = <h2>${titre}</h2><p>${description}</p>;
 
       card.addEventListener('click', () => {
         ouvrirRubrique(id);
-        history.pushState({ page: id }, '', `?page=${id}`);
+        history.pushState({ page: id }, '', ?page=${id});
       });
 
       container.appendChild(card);
     });
 
-    // Bouton accès mur (inchangé)
+    // Bouton accès mur
     const btnMur = document.getElementById('btnMur');
     btnMur.addEventListener('click', () => {
       window.location.href = 'mur.html';
     });
 
-    // Lecture du paramètre ?page= à l’ouverture de la page
+    // Lecture du paramètre ?page= à l'ouverture de la page
     function getParamPage() {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('page');
@@ -496,11 +531,16 @@
 
     // Gestion bouton Retour navigateur
     window.addEventListener('popstate', (event) => {
+      const popup = document.getElementById('popupRubrique');
+      if (popup) {
+        popup.remove();
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+      }
+      
       if (event.state && event.state.page) {
         ouvrirRubrique(event.state.page);
-      } else {
-        const popup = document.getElementById('popupRubrique');
-        if (popup) popup.remove();
       }
     });
   </script>

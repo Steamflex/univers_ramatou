@@ -33,7 +33,7 @@
       margin-bottom: 20px;
       animation: fadeIn 2s ease;
       position: relative;
-      z-index: 10; /* Au-dessus des coeurs */
+      z-index: 10;
       user-select: text;
     }
 
@@ -131,13 +131,13 @@
   </script>
 
   <script>
-    const couleurs = ['#a0c8f0', '#f5a3c7', '#ff4f6d']; // bleu clair, rose, rouge
+    const couleurs = ['#a0c8f0', '#f5a3c7', '#ff4f6d'];
     const maxCoeurs = 40;
 
     function creeCoeur() {
       const coeur = document.createElement('div');
       coeur.classList.add('coeur');
-      coeur.textContent = '❤️';
+      coeur.textContent = '❤';
 
       const taille = (Math.random() * 20 + 15).toFixed(2) + 'px';
       coeur.style.setProperty('--size', taille);
@@ -150,7 +150,7 @@
       const duree = (Math.random() * 6 + 6).toFixed(2);
       coeur.style.animationDuration = duree + 's';
 
-      coeur.style.transform = `rotate(${Math.random() * 360}deg)`;
+      coeur.style.transform = rotate(${Math.random() * 360}deg);
 
       document.body.appendChild(coeur);
 
